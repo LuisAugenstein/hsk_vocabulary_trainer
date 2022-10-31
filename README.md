@@ -2,7 +2,7 @@
 
 A simple flutter app to train chinese vocabularies needed to pass the HSK tests.
 
-![App Screenshot](app-screenshot.png)
+![App Animation](animation.gif)
 
 # Try it out 
 
