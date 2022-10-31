@@ -6,5 +6,6 @@ A simple flutter app to train chinese vocabularies needed to pass the HSK tests.
 
 # Try it out 
 
-you can download the app from the windows store: 
-Or directly test it in your browser: 
+You can download the app from the windows store:
+
+Or directly test it in your browser: https://hsk-vocabulary-trainer.netlify.app
