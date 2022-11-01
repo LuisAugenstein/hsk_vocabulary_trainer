@@ -10,6 +10,7 @@ class _QuizScreenState extends State<QuizScreen> {
   late List<HskLevel> _selectedHskLevels;
   late List<Question> _questionList;
   late int _currentQuestionIndex, _lives;
+  bool _chineseToEnglish = true;
   Answer? _selectedAnswer;
 
   @override
@@ -50,13 +51,40 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   _title() {
-    return const Text(
-      "HSK Trainer",
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 36,
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Container(
+          width: 40,
+          margin: const EdgeInsets.only(left: 10, right: 10),
+          child: TextButton(
+            onPressed: () {
+              setState(() {
+                _chineseToEnglish = !_chineseToEnglish;
+                _resetQuestions();
+              });
+            },
+            child: Column(
+              children: [
+                Text(_chineseToEnglish ? "🇨🇳" : "🇬🇧"),
+                const Icon(
+                  Icons.autorenew,
+                  color: Colors.white,
+                  size: 14,
+                ),
+                Text(_chineseToEnglish ? "🇬🇧" : "🇨🇳"),
+              ],
+            ),
+          )),
+      const Text(
+        "HSK Trainer",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 36,
+        ),
       ),
-    );
+      const SizedBox(
+        width: 60,
+      )
+    ]);
   }
 
   _hskLevelSelectionChips() {
@@ -75,7 +103,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 selected
                     ? _selectedHskLevels.add(HskLevel.values[index])
                     : _selectedHskLevels.remove(HskLevel.values[index]);
-                _setHskLevel(_selectedHskLevels);
+                _resetQuestions();
               },
             );
           },
@@ -140,7 +168,7 @@ class _QuizScreenState extends State<QuizScreen> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Text(
-        "${_questionList[_currentQuestionIndex].questionSymbol}\n${_questionList[_currentQuestionIndex].questionPinyin}",
+        _questionList[_currentQuestionIndex].questionText,
         textAlign: TextAlign.center,
         style: const TextStyle(
           color: Colors.white,
@@ -237,7 +265,7 @@ class _QuizScreenState extends State<QuizScreen> {
       ],
     );
     showDialog(context: context, builder: (_) => alertDialog)
-        .then((value) => _setHskLevel(_selectedHskLevels));
+        .then((value) => _resetQuestions());
   }
 
   Future<void> _resetState() async {
@@ -250,12 +278,14 @@ class _QuizScreenState extends State<QuizScreen> {
     });
   }
 
-  _setHskLevel(List<HskLevel> hskLevels) async {
+  _resetQuestions() async {
+    List<HskLevel> selectedHskLevels = _selectedHskLevels;
     _resetState();
-    List<Question> questionList = await getQuestions(hskLevels);
+    List<Question> questionList =
+        await getQuestions(selectedHskLevels, _chineseToEnglish);
     setState(() {
+      _selectedHskLevels = selectedHskLevels;
       _questionList = questionList;
-      _selectedHskLevels = hskLevels;
     });
   }
 }
