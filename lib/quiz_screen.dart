@@ -20,6 +20,14 @@ class _QuizScreenState extends State<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData media = MediaQuery.of(context);
+
+    double minWidth = 360;
+    double maxWidth = 400;
+    double width = media.size.width - 10;
+    width = width < minWidth ? minWidth : width;
+    width = width > maxWidth ? maxWidth : width;
+
     return Scaffold(
         backgroundColor: const Color.fromARGB(255, 5, 50, 80),
         body: SingleChildScrollView(
@@ -27,9 +35,8 @@ class _QuizScreenState extends State<QuizScreen> {
           child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Container(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-                width: 400,
+                margin: const EdgeInsets.only(left: 5, right: 5),
+                width: width,
                 child: Column(children: [
                   const SizedBox(height: 30),
                   _title(),
@@ -156,7 +163,12 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Widget _answerButton(Answer answer) {
-    bool isSelected = answer == _selectedAnswer;
+    Color buttonColor = Theme.of(context).primaryColor;
+    if (_selectedAnswer != null && answer.isCorrect) {
+      buttonColor = Colors.green;
+    } else if (answer == _selectedAnswer && !answer.isCorrect) {
+      buttonColor = Colors.red;
+    }
 
     return Container(
       width: double.infinity,
@@ -165,9 +177,7 @@ class _QuizScreenState extends State<QuizScreen> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: const StadiumBorder(),
-          primary: isSelected
-              ? (answer.isCorrect ? Colors.green : Colors.red)
-              : Theme.of(context).primaryColor,
+          primary: buttonColor,
         ),
         onPressed: () {
           if (_selectedAnswer != null) {
