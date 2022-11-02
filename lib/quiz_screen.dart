@@ -64,13 +64,17 @@ class _QuizScreenState extends State<QuizScreen> {
             },
             child: Column(
               children: [
-                Text(_chineseToEnglish ? "🇨🇳" : "🇬🇧"),
+                _chineseToEnglish
+                    ? Image.asset("assets/chinese-flag.png")
+                    : Image.asset("assets/british-flag.png"),
                 const Icon(
                   Icons.autorenew,
                   color: Colors.white,
                   size: 14,
                 ),
-                Text(_chineseToEnglish ? "🇬🇧" : "🇨🇳"),
+                _chineseToEnglish
+                    ? Image.asset("assets/british-flag.png")
+                    : Image.asset("assets/chinese-flag.png"),
               ],
             ),
           )),
